@@ -210,9 +210,11 @@ function setUp() {
   document.querySelector(".joke").style.display = "none"
 }
 
-function resetValues() {
+async function resetValues() {
+  user = await getUser(user.username)
   if (user != null) {
     document.querySelector(".currBest").innerHTML = user.highscore
+    console.log(user)
   }
   timeLeft = timeLimit
   timeElapsed = 0
