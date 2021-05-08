@@ -23,7 +23,7 @@
       </div>
       <div class="timer">
         <div class="headerText">Time:</div>
-        <div class="currTime">10s</div>
+        <div class="currTime">30s</div>
       </div>
       <div class="user">
         <div class="headerText">User:</div>
@@ -35,12 +35,13 @@
     <textarea class="inputArea" placeholder="start typing here..." oninput="processCurrentText()"
       onfocus="startGame()"></textarea>
     <button class="restartBtn" onclick="resetValues()">Restart</button>
+    <div class="joke"></div>
+    <div class="track">Login or create an account to track your WPM!</div>
     <input class="username" placeholder="enter username"></input>
     <input class="password" placeholder="enter password"></input>
-    <button class="loginBtn">Login</button>
-    <button class="signupBtn">Sign Up</button>
-
-    <div class="fact"></div>
+    <button class="loginBtn" onclick="loginFunc()">Login</button>
+    <button class="signupBtn" onclick="signupFunc()">Sign Up</button>
+    <button class='signoutBtn' onclick="signoutFunc()">Sign Out</button>
   </div>
   <script src="script.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

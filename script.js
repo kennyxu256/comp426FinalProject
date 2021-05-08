@@ -1,27 +1,11 @@
-let TIME_LIMIT = 10;
-let timerText = document.querySelector(".currTime")
-let cpmText = document.querySelector(".currCpm")
-let wpmText = document.querySelector(".currWpm")
-let bestText = document.querySelector(".currBest")
-let userText = document.querySelector(".currUser")
-let quoteText = document.querySelector(".quote")
-let inputArea = document.querySelector(".inputArea");
-let restartBtn = document.querySelector(".restartBtn")
-let cpmGroup = document.querySelector(".cpm")
-let wpmGroup = document.querySelector(".wpm")
-let factGroup = document.querySelector(".fact")
-let loginSelector = document.querySelector(".loginBtn")
-let signupSelector = document.querySelector(".signupBtn")
-let usernameSelector = document.querySelector(".username")
-let timeLeft = TIME_LIMIT
+let timeLimit = 30;
+let timeLeft = timeLimit
 let timeElapsed = 0
 let characterTyped = 0
-let correctCharacter = 0
-let quoteNo = 0
 let currentQuote = ""
 let timer = null
 let grabbedQuote = ""
-let factQuote = ""
+let jokeQuote = ""
 let user = null
 let loggedIn = false
 
@@ -35,24 +19,23 @@ async function grabQuote() {
 async function updateQuote() {
   await grabQuote()
   currentQuote = grabbedQuote
-  quoteText.textContent = null
+  document.querySelector(".quote").textContent = null
   // separate each character and make an element out of each individual one
-  // append each one to the now null quoteText area
+  // append each one to the now null document.querySelector(".quote") area
   currentQuote.split('').forEach(char => {
     const charSpan = document.createElement('span')
     charSpan.innerText = char
-    quoteText.appendChild(charSpan)
+    document.querySelector(".quote").appendChild(charSpan)
   })
 }
 
 function processCurrentText() {
-
   // get current input text and split it
-  currInput = inputArea.value;
+  currInput = document.querySelector(".inputArea").value;
   currInputArray = currInput.split('')
   characterTyped++
 
-  quoteSpanArray = quoteText.querySelectorAll('span');
+  quoteSpanArray = document.querySelector(".quote").querySelectorAll('span');
   quoteSpanArray.forEach((char, index) => {
     let typedChar = currInputArray[index]
 
@@ -76,77 +59,54 @@ function processCurrentText() {
   // irrespective of errors
   if (currInput.length == currentQuote.length) {
     updateQuote();
-    inputArea.value = ""
+    document.querySelector(".inputArea").value = ""
   }
 }
 
-function updateTimer() {
-  if (timeLeft > 0) {
-    timeLeft--;
-    timeElapsed++;
-
-    // update the timer text
-    timerText.textContent = timeLeft + "s"
-  }
-  else {
-    // timer has finished
-    finishGame();
-  }
-}
-
-async function findFact() {
+async function findJoke() {
   const response = await fetch("https://official-joke-api.appspot.com/random_joke")
   const data = await response.json()
-  factQuote = data.setup + " " + data.punchline
+  jokeQuote = data.setup + " " + data.punchline
 } 
 
-async function finishGame() {
-  // stop the timer
-  clearInterval(timer);
-  // disable the input area
-  inputArea.disabled = true;
-  //test
-
-  quoteText.textContent = "Click restart to start a new game."
-  // display restart button
-  restartBtn.style.display = "block"
-
-  // calculate cpm and wpm
-  cpm = Math.round(((characterTyped / timeElapsed) * 60))
-  wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60))
-  if (user != null) {
-    if (wpm > user.highscore) {
-      putHighScore(wpm)
-    }
-    // test
+async function loginFunc() {
+  user = await getUser(document.querySelector(".username").value)
+  if (user != null && document.querySelector(".password").value === user.password) {
+      document.querySelector(".currBest").innerHTML = user.highscore
+      document.querySelector(".currUser").innerHTML = user.username
+      document.querySelector(".username").style.display = 'none'
+      document.querySelector(".password").style.display = 'none'
+      document.querySelector(".loginBtn").style.display = 'none'
+      document.querySelector(".signupBtn").style.display = 'none'
+      document.querySelector('.track').style.display = 'none'
+      document.querySelector('.signoutBtn').style.display = 'block'
+  } else {
+    alert('User with that username and password combination does not exist.')
   }
-  // update cpm wpm and fact
-  cpmText.textContent = cpm
-  wpmText.textContent = wpm
-  await findFact()
-  factGroup.innerHTML = 'Don\'t get frustrated if you can\'t increase your WPM, here\'s a joke: <br>' + factQuote
-
-  findFact(wpm)
-  // display the cpm wpm and fact
-  cpmGroup.style.display = "block"
-  wpmGroup.style.display = "block"
-  factGroup.style.display = "block"
 }
 
-loginSelector.addEventListener('click', async () => {
-    user = await getUser(usernameSelector.value)
-    bestText.innerHTML = user.highscore
-    userText.innerHTML = user.username
-})
+async function signupFunc() {
+  const tempUser = document.querySelector(".username").value
+  const tempPass = document.querySelector(".password").value 
+  user = await getUser(document.querySelector(".username").value)
+  if (user == null) {
+    postUser(tempUser, tempPass)
+    alert('Account created! Login to play')
+  } else {
+    alert('A user with that username already exists')
+  }
+}
 
-signupSelector.addEventListener('click', () => {
-  const tempUser = usernameSelector.value
-  const tempPass = passwordSelector.value 
-  postUser(tempUser, tempPass)
-})
+function signoutFunc() {
+  window.location.reload();
+}
 
 async function getUser(user) {
-  const res = await fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
+  const res = await fetch ('https://kennyxu.pythonanywhere.com/user/' + user)
+  if (!(res.ok)) {
+    return null
+  }
+
   const data = await res.json()
   return data
 }
@@ -154,23 +114,26 @@ async function getUser(user) {
 function postUser(username, password) {
   axios({
     method: 'post',
-    url: 'http://kennyxu.pythonanywhere.com/',
+    url: 'https://kennyxu.pythonanywhere.com/user',
     data: {
-      username: 'username',
-      password: 'password'
+      username: username,
+      password: password
     }
   })
 }
 
-function putHighScore(best) {
-  const res = fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
-
-  user.highscore = best
-  bestText.innerHTML = best
+function putHighScore(person, best) {
+  axios({
+    method: 'put',
+    url: 'https://kennyxu.pythonanywhere.com/user/' + person,
+    data: {
+      highscore: best
+    }
+  })
 }
 
 function startGame() {
-  resetValues()
+  setUp()
   updateQuote()
 
   // clear old and start a new timer
@@ -178,17 +141,85 @@ function startGame() {
   timer = setInterval(updateTimer, 1000)
 }
 
-function resetValues() {
-  timeLeft = TIME_LIMIT
+function updateTimer() {
+  if (timeLeft > 0) {
+    timeLeft--;
+    timeElapsed++;
+    // update the timer text
+    document.querySelector(".currTime").textContent = timeLeft + "s"
+  }
+  else {
+    // timer has finished
+    finishGame();
+  }
+}
+
+async function finishGame() {
+  // stop the timer
+  clearInterval(timer);
+  // disable the input area
+  document.querySelector(".inputArea").disabled = true;
+  //test
+
+  document.querySelector(".quote").textContent = "Click restart to start a new game."
+  // display restart button
+  document.querySelector(".restartBtn").style.display = "block"
+
+  // calculate cpm and wpm
+  cpm = Math.round(((characterTyped / timeElapsed) * 60))
+  wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60))
+  if (user != null) {
+    if (wpm > user.highscore) {
+      putHighScore(user.username, wpm)
+      document.querySelector(".currBest").innerHTML = wpm
+    } else {
+      document.querySelector(".currBest").innerHTML = user.highscore
+    }
+  }
+  // update cpm wpm and joke
+  document.querySelector(".currCpm").textContent = cpm
+  document.querySelector(".currWpm").textContent = wpm
+  await findJoke()
+  document.querySelector(".joke").innerHTML = 'Don\'t get frustrated if you can\'t increase your WPM, here\'s a joke:<br>' + jokeQuote
+
+  // display the cpm wpm and joke
+  document.querySelector(".cpm").style.display = "block"
+  document.querySelector(".wpm").style.display = "block"
+  document.querySelector(".joke").style.display = "block"
+}
+
+function setUp() {
+  timeLeft = timeLimit
   timeElapsed = 0
   characterTyped = 0
-  quoteNo = 0
-  inputArea.disabled = false
-  inputArea.value = ""
-  quoteText.textContent = 'Click on the area below to start the game.'
-  timerText.textContent = timeLeft + 's'
-  restartBtn.style.display = "none"
-  cpmGroup.style.display = "none"
-  wpmGroup.style.display = "none"
-  factGroup.style.display = "none"
+  document.querySelector(".inputArea").disabled = false
+  document.querySelector(".inputArea").value = ""
+  document.querySelector(".quote").textContent = 'Click on the area below to start the game.'
+  document.querySelector(".currTime").textContent = timeLeft + 's'
+  document.querySelector(".restartBtn").style.display = "none"
+  document.querySelector(".cpm").style.display = "none"
+  document.querySelector(".wpm").style.display = "none"
+  document.querySelector(".joke").style.display = "none"
+}
+
+function resetValues() {
+  if (user != null) {
+    if (wpm > user.highscore) {
+      document.querySelector(".currBest").innerHTML = wpm
+    }
+    // console.log(user.highscore)
+
+    // document.querySelector(".currBest").innerHTML = user.highscore
+  }
+  timeLeft = timeLimit
+  timeElapsed = 0
+  characterTyped = 0
+  document.querySelector(".inputArea").disabled = false
+  document.querySelector(".inputArea").value = ""
+  document.querySelector(".quote").textContent = 'Click on the area below to start the game.'
+  document.querySelector(".currTime").textContent = timeLeft + 's'
+  document.querySelector(".restartBtn").style.display = "none"
+  document.querySelector(".cpm").style.display = "none"
+  document.querySelector(".wpm").style.display = "none"
+  document.querySelector(".joke").style.display = "none"
 }
