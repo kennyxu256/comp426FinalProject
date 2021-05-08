@@ -134,7 +134,7 @@ function signoutFunc() {
 // })
 
 async function getUser(user) {
-  const res = await fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
+  const res = await fetch ('https://kennyxu.pythonanywhere.com/user/' + user)
   if (!(res.ok)) {
     return null
   }
@@ -146,7 +146,7 @@ async function getUser(user) {
 function postUser(username, password) {
   axios({
     method: 'post',
-    url: 'http://kennyxu.pythonanywhere.com/user',
+    url: 'https://kennyxu.pythonanywhere.com/user',
     data: {
       username: username,
       password: password
@@ -157,7 +157,7 @@ function postUser(username, password) {
 function putHighScore(person, best) {
   axios({
     method: 'put',
-    url: 'http://kennyxu.pythonanywhere.com/user/' + person,
+    url: 'https://kennyxu.pythonanywhere.com/user/' + person,
     data: {
       highscore: best
     }
