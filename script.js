@@ -1,13 +1,12 @@
-let timeLimit = 30;
+let timeLimit = 10;
 let timeLeft = timeLimit
 let timeElapsed = 0
-let characterTyped = 0
+let charTyped = 0
 let currentQuote = ""
 let timer = null
 let grabbedQuote = ""
 let jokeQuote = ""
 let user = null
-let loggedIn = false
 
 // grab a quote from Quotable API
 async function grabQuote() {
@@ -33,30 +32,29 @@ function processCurrentText() {
   // get current input text and split it
   currInput = document.querySelector(".inputArea").value;
   currInputArray = currInput.split('')
-  characterTyped++
-
+  
+  // charTyped++
   quoteSpanArray = document.querySelector(".quote").querySelectorAll('span');
   quoteSpanArray.forEach((char, index) => {
     let typedChar = currInputArray[index]
-
     // characters not currently typed
     if (typedChar == null) {
       char.classList.remove('correctChar')
       char.classList.remove('incorrectChar')
-
       // correct characters
     } else if (typedChar === char.innerText) {
       char.classList.add('correctChar');
       char.classList.remove('incorrectChar')
+      charTyped = charTyped + 1/currInputArray.length
+      // console.log(charTyped)
       // incorrect characters
     } else {
       char.classList.add('incorrectChar')
       char.classList.remove('correctChar')
     }
   });
-
+  
   // if current text is completely typed
-  // irrespective of errors
   if (currInput.length == currentQuote.length) {
     updateQuote();
     document.querySelector(".inputArea").value = ""
@@ -166,8 +164,8 @@ async function finishGame() {
   document.querySelector(".restartBtn").style.display = "block"
 
   // calculate cpm and wpm
-  cpm = Math.round(((characterTyped / timeElapsed) * 60))
-  wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60))
+  cpm = Math.round(((charTyped / timeElapsed) * 60))
+  wpm = Math.round((((charTyped / 5) / timeElapsed) * 60))
   if (user != null) {
     if (wpm > user.highscore) {
       putHighScore(user.username, wpm)
@@ -191,7 +189,7 @@ async function finishGame() {
 function setUp() {
   timeLeft = timeLimit
   timeElapsed = 0
-  characterTyped = 0
+  charTyped = 0
   document.querySelector(".inputArea").disabled = false
   document.querySelector(".inputArea").value = ""
   document.querySelector(".quote").textContent = 'Click on the area below to start the game.'
@@ -213,7 +211,7 @@ function resetValues() {
   }
   timeLeft = timeLimit
   timeElapsed = 0
-  characterTyped = 0
+  charTyped = 0
   document.querySelector(".inputArea").disabled = false
   document.querySelector(".inputArea").value = ""
   document.querySelector(".quote").textContent = 'Click on the area below to start the game.'
