@@ -101,38 +101,6 @@ function signoutFunc() {
   window.location.reload();
 }
 
-// document.querySelector(".loginBtn").addEventListener('click', async () => {
-//     user = await getUser(document.querySelector(".username").value)
-//     if (user != null && document.querySelector(".password").value === user.password) {
-//         document.querySelector(".currBest").innerHTML = user.highscore
-//         document.querySelector(".currUser").innerHTML = user.username
-//         document.querySelector(".username").style.display = 'none'
-//         document.querySelector(".password").style.display = 'none'
-//         document.querySelector(".loginBtn").style.display = 'none'
-//         document.querySelector(".signupBtn").style.display = 'none'
-//         document.querySelector('.track').style.display = 'none'
-//         document.querySelector('.signoutBtn').style.display = 'block'
-//     } else {
-//       alert('User with that username and password combination does not exist.')
-//     }
-// })
-
-// document.querySelector(".signupBtn").addEventListener('click', async () => {
-//   const tempUser = document.querySelector(".username").value
-//   const tempPass = document.querySelector(".password").value 
-//   user = await getUser(document.querySelector(".username").value)
-//   if (user == null) {
-//     postUser(tempUser, tempPass)
-//     alert('Account created! Login to play')
-//   } else {
-//     alert('A user with that username already exists')
-//   }
-// })
-
-// document.querySelector('.signoutBtn').addEventListener('click', () => {
-//   window.location.reload();
-// })
-
 async function getUser(user) {
   const res = await fetch ('https://kennyxu.pythonanywhere.com/user/' + user)
   if (!(res.ok)) {
