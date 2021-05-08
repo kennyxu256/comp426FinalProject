@@ -1,4 +1,4 @@
-let timeLimit = 10;
+let timeLimit = 30;
 let timeLeft = timeLimit
 let timeElapsed = 0
 let characterTyped = 0
@@ -112,16 +112,24 @@ async function getUser(user) {
 }
 
 function postUser(username, password) {
-  fetch('http://kennyxu.pythonanywhere.com/user', {
-    method: 'POST',
-    headers: {
-      'Content-Type' : 'application/json'
-    },
-    body: JSON.stringify({
+  // fetch('http://kennyxu.pythonanywhere.com/user', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type' : 'application/json'
+  //   },
+  //   body: JSON.stringify({
+  //     username: username,
+  //     password: password,
+  //     highscore: 0
+  //   })
+  // })
+  axios({
+    method: 'post',
+    url: 'http://kennyxu.pythonanywhere.com/user',
+    data: {
       username: username,
-      password: password,
-      highscore: 0
-    })
+      password: password
+    }
   })
 }
 
