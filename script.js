@@ -69,23 +69,23 @@ async function findJoke() {
   jokeQuote = data.setup + " " + data.punchline
 } 
 
-document.querySelector(".loginBtn").addEventListener('click', async () => {
-    user = await getUser(document.querySelector(".username").value)
-    if (user != null && document.querySelector(".password").value === user.password) {
-        document.querySelector(".currBest").innerHTML = user.highscore
-        document.querySelector(".currUser").innerHTML = user.username
-        document.querySelector(".username").style.display = 'none'
-        document.querySelector(".password").style.display = 'none'
-        document.querySelector(".loginBtn").style.display = 'none'
-        document.querySelector(".signupBtn").style.display = 'none'
-        document.querySelector('.track').style.display = 'none'
-        document.querySelector('.signoutBtn').style.display = 'block'
-    } else {
-      alert('User with that username and password combination does not exist.')
-    }
-})
+async function loginFunc() {
+  user = await getUser(document.querySelector(".username").value)
+  if (user != null && document.querySelector(".password").value === user.password) {
+      document.querySelector(".currBest").innerHTML = user.highscore
+      document.querySelector(".currUser").innerHTML = user.username
+      document.querySelector(".username").style.display = 'none'
+      document.querySelector(".password").style.display = 'none'
+      document.querySelector(".loginBtn").style.display = 'none'
+      document.querySelector(".signupBtn").style.display = 'none'
+      document.querySelector('.track').style.display = 'none'
+      document.querySelector('.signoutBtn').style.display = 'block'
+  } else {
+    alert('User with that username and password combination does not exist.')
+  }
+}
 
-document.querySelector(".signupBtn").addEventListener('click', async () => {
+async function signupFunc() {
   const tempUser = document.querySelector(".username").value
   const tempPass = document.querySelector(".password").value 
   user = await getUser(document.querySelector(".username").value)
@@ -95,11 +95,43 @@ document.querySelector(".signupBtn").addEventListener('click', async () => {
   } else {
     alert('A user with that username already exists')
   }
-})
+}
 
-document.querySelector('.signoutBtn').addEventListener('click', () => {
+function signoutFunc() {
   window.location.reload();
-})
+}
+
+// document.querySelector(".loginBtn").addEventListener('click', async () => {
+//     user = await getUser(document.querySelector(".username").value)
+//     if (user != null && document.querySelector(".password").value === user.password) {
+//         document.querySelector(".currBest").innerHTML = user.highscore
+//         document.querySelector(".currUser").innerHTML = user.username
+//         document.querySelector(".username").style.display = 'none'
+//         document.querySelector(".password").style.display = 'none'
+//         document.querySelector(".loginBtn").style.display = 'none'
+//         document.querySelector(".signupBtn").style.display = 'none'
+//         document.querySelector('.track').style.display = 'none'
+//         document.querySelector('.signoutBtn').style.display = 'block'
+//     } else {
+//       alert('User with that username and password combination does not exist.')
+//     }
+// })
+
+// document.querySelector(".signupBtn").addEventListener('click', async () => {
+//   const tempUser = document.querySelector(".username").value
+//   const tempPass = document.querySelector(".password").value 
+//   user = await getUser(document.querySelector(".username").value)
+//   if (user == null) {
+//     postUser(tempUser, tempPass)
+//     alert('Account created! Login to play')
+//   } else {
+//     alert('A user with that username already exists')
+//   }
+// })
+
+// document.querySelector('.signoutBtn').addEventListener('click', () => {
+//   window.location.reload();
+// })
 
 async function getUser(user) {
   const res = await fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
@@ -112,17 +144,6 @@ async function getUser(user) {
 }
 
 function postUser(username, password) {
-  // fetch('http://kennyxu.pythonanywhere.com/user', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type' : 'application/json'
-  //   },
-  //   body: JSON.stringify({
-  //     username: username,
-  //     password: password,
-  //     highscore: 0
-  //   })
-  // })
   axios({
     method: 'post',
     url: 'http://kennyxu.pythonanywhere.com/user',
