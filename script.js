@@ -117,6 +117,7 @@ async function finishGame() {
     if (wpm > user.highscore) {
       putHighScore(wpm)
     }
+    // test
   }
   // update cpm wpm and fact
   cpmText.textContent = cpm
@@ -162,7 +163,7 @@ function postUser(username, password) {
 
 function putHighScore(best) {
   const res = fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
-  
+
   user.highscore = best
   bestText.innerHTML = best
 }
