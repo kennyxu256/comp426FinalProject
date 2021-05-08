@@ -105,6 +105,7 @@ async function finishGame() {
   clearInterval(timer);
   // disable the input area
   inputArea.disabled = true;
+  //test
 
   quoteText.textContent = "Click restart to start a new game."
   // display restart button
