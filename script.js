@@ -11,6 +11,7 @@ let cpmGroup = document.querySelector(".cpm")
 let wpmGroup = document.querySelector(".wpm")
 let factGroup = document.querySelector(".fact")
 let loginSelector = document.querySelector(".loginBtn")
+let signupSelector = document.querySelector(".signupBtn")
 let usernameSelector = document.querySelector(".username")
 let timeLeft = TIME_LIMIT
 let timeElapsed = 0
@@ -93,18 +94,13 @@ function updateTimer() {
   }
 }
 
-//find a fact about a given number
-function findFact(number) {
-  fetch('http://numbersapi.com/' + number)
-    .then((response) => response.text())
-    .then((data) => {
-      factGroup.innerHTML = 'Fun Fact About Your WPM: ' + data
-    })
-
-  console.log(factQuote)
+async function findFact() {
+  const response = await fetch("https://official-joke-api.appspot.com/random_joke")
+  const data = await response.json()
+  factQuote = data.setup + " " + data.punchline
 } 
 
- function finishGame() {
+async function finishGame() {
   // stop the timer
   clearInterval(timer);
   // disable the input area
@@ -125,6 +121,9 @@ function findFact(number) {
   // update cpm wpm and fact
   cpmText.textContent = cpm
   wpmText.textContent = wpm
+  await findFact()
+  factGroup.innerHTML = 'Don\'t get frustrated if you can\'t increase your WPM, here\'s a joke: <br>' + factQuote
+
   findFact(wpm)
   // display the cpm wpm and fact
   cpmGroup.style.display = "block"
@@ -138,6 +137,12 @@ loginSelector.addEventListener('click', async () => {
     userText.innerHTML = user.username
 })
 
+signupSelector.addEventListener('click', () => {
+  const tempUser = usernameSelector.value
+  const tempPass = passwordSelector.value 
+  postUser(tempUser, tempPass)
+})
+
 async function getUser(user) {
   const res = await fetch ('http://kennyxu.pythonanywhere.com/user/' + user)
   const data = await res.json()
@@ -145,7 +150,14 @@ async function getUser(user) {
 }
 
 function postUser(username, password) {
-
+  axios({
+    method: 'post',
+    url: 'http://kennyxu.pythonanywhere.com/',
+    data: {
+      username: 'username',
+      password: 'password'
+    }
+  })
 }
 
 function putHighScore(best) {
