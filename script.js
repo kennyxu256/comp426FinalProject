@@ -78,6 +78,7 @@ async function loginFunc() {
       document.querySelector(".signupBtn").style.display = 'none'
       document.querySelector('.track').style.display = 'none'
       document.querySelector('.signoutBtn').style.display = 'block'
+      setUp()
   } else {
     alert('User with that username and password combination does not exist.')
   }
@@ -90,6 +91,7 @@ async function signupFunc() {
   if (user == null) {
     postUser(tempUser, tempPass)
     alert('Account created! Login to play')
+    setUp()
   } else {
     alert('A user with that username already exists')
   }
@@ -167,8 +169,6 @@ async function finishGame() {
   clearInterval(timer);
   // disable the input area
   document.querySelector(".inputArea").disabled = true;
-  //test
-
   document.querySelector(".quote").textContent = "Click restart to start a new game."
   // display restart button
   document.querySelector(".restartBtn").style.display = "block"
@@ -212,12 +212,7 @@ function setUp() {
 
 function resetValues() {
   if (user != null) {
-    if (wpm > user.highscore) {
-      document.querySelector(".currBest").innerHTML = wpm
-    }
-    // console.log(user.highscore)
-
-    // document.querySelector(".currBest").innerHTML = user.highscore
+    document.querySelector(".currBest").innerHTML = user.highscore
   }
   timeLeft = timeLimit
   timeElapsed = 0
