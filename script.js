@@ -211,10 +211,9 @@ function setUp() {
 }
 
 async function resetValues() {
-  user = await getUser(user.username)
   if (user != null) {
+    user = await getUser(user.username)
     document.querySelector(".currBest").innerHTML = user.highscore
-    console.log(user)
   }
   timeLeft = timeLimit
   timeElapsed = 0
