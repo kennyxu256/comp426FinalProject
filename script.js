@@ -1,4 +1,4 @@
-let timeLimit = 10;
+let timeLimit = 30;
 let timeLeft = timeLimit
 let timeElapsed = 0
 let charTyped = 0
@@ -98,6 +98,16 @@ async function signupFunc() {
 function signoutFunc() {
   window.location.reload();
 }
+
+// function leaderboardFunc() {
+//   const leaders = ""
+//   for (var i = 1; i < 21; i++) {
+//     axios({
+//       method: 'get',
+
+//     })
+//   }
+// }
 
 async function getUser(user) {
   const res = await fetch ('https://kennyxu.pythonanywhere.com/user/' + user)
